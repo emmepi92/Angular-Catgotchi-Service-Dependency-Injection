@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-
+import { PointsService } from './services/points-service.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,103 +15,52 @@ export class AppComponent implements OnInit {
   public isDied: boolean = false;
   public showButtonRestart: boolean = false;
   public openModal: boolean = false;
+  public interval: any;
 
-  @ViewChild('modal')
-  modal!: ElementRef;
+  constructor(private pointsService: PointsService) {
+  }
 
-  private gameTimer = () => {
+  @ViewChild('modal') modal!: ElementRef;
+
+  public gameTimer = () => {
     if (this.hungryPoints <= 0 || this.sleepyPoints <= 0 || this.cleanPoints <= 0 || this.happyPoints <= 0) {
       clearInterval(this.interval)
-      // this.modal.nativeElement.click();
       this.openModal = true
-
       this.isDied = true
     } else if (!this.isDied) {
-
-      let areAllOver50 = [this.hungryPoints, this.sleepyPoints, this.cleanPoints, this.happyPoints].every(points => points > 50);
-
-      if (this.hungryPoints <= 1) {
-        this.hungryPoints = 0;
-      } else {
-        this.hungryPoints -= 2;
-      }
+      this.isHappy = this.pointsService.allOver50(this.hungryPoints, this.sleepyPoints, this.cleanPoints, this.happyPoints);
       this.sleepyPoints -= 1;
       this.cleanPoints -= 1;
-      if (this.happyPoints <= 1) {
-        this.happyPoints = 0;
-      } else {
-        this.happyPoints -= 2;
-      }
-
-      if (!areAllOver50) {
-        this.isHappy = false
-      }
-      else if (areAllOver50) {
-        this.isHappy = true
-      }
+      this.hungryPoints= this.pointsService.loseLastPoints(this.hungryPoints,2)
+      this.happyPoints = this.pointsService.loseLastPoints(this.happyPoints, 2)
+      
     }
   }
 
-  private interval: any;
-
-
   ngOnInit() {
    this.interval = setInterval(this.gameTimer, 1000)
-
-    if (this.hungryPoints == 0 || this.sleepyPoints == 0 || this.cleanPoints == 0 || this.happyPoints == 0) {
-      this.stopGame()
-    }
   }
 
   startGame() {
     this.interval = setInterval(this.gameTimer, 1000)
   }
-  stopGame() {
-    clearInterval(this.interval)
-  }
 
   gimmeTuna() {
-    if (this.hungryPoints >= 95) {
-      this.hungryPoints = 100;
-    } else {
-      this.hungryPoints += 5;
-    }
-    if (this.cleanPoints >= 2) {
-      this.cleanPoints -= 2
-    }
+    this.hungryPoints = this.pointsService.give5Points(this.hungryPoints);
+    this.cleanPoints = this.pointsService.losePointsCollateral(this.cleanPoints, 2)
   }
   gimmeSleep() {
-    if (this.sleepyPoints >= 95) {
-      this.sleepyPoints = 100;
-    } else {
-      this.sleepyPoints += 5;
-    }
-    if (this.hungryPoints >= 2) {
-      this.hungryPoints -= 2
-    }
-    if (this.happyPoints >= 2) {
-      this.happyPoints -= 2
-    }
+    this.sleepyPoints = this.pointsService.give5Points(this.sleepyPoints)
+    this.hungryPoints = this.pointsService.losePointsCollateral(this.hungryPoints, 2)
+    this.happyPoints = this.pointsService.losePointsCollateral(this.happyPoints, 2)
   }
   gimmeBath() {
-    if (this.cleanPoints >= 95) {
-      this.cleanPoints = 100;
-    } else {
-      this.cleanPoints += 5;
-    }
-    if (this.happyPoints >= 5) {
-      this.happyPoints -= 5
-    }
+    this.cleanPoints = this.pointsService.give5Points(this.cleanPoints)
+    this.happyPoints = this.pointsService.losePointsCollateral(this.happyPoints, 5)
   }
   gimmeRubs() {
-    if (this.happyPoints >= 95) {
-      this.happyPoints = 100;
-    } else {
-      this.happyPoints += 5;
-    }
-    if (this.hungryPoints >= 3) {
-      this.hungryPoints -= 3
-    }
+    this.happyPoints = this.pointsService.give5Points(this.happyPoints)
+    this.hungryPoints = this.pointsService.losePointsCollateral(this.hungryPoints, 3)
   }
 
   gimme(something: string): any {

@@ -9,9 +9,7 @@ export class InfoBarComponent implements OnInit {
   @Input() title: string = '';
   @Input() value: number = 0;
 
-
   constructor() { }
-
   ngOnInit(): void {
   }
 

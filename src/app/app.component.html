@@ -1,0 +1,39 @@
+<div class="fluid-container">
+  <div>
+    <h1 class="header-box">Hello, I'm your Catgotchi!</h1>
+    <div class="center-box">
+      <div class="info-box">
+        <app-info-bar title="Hungry" [value]='hungryPoints'></app-info-bar>
+        <app-info-bar title="Sleepy" [value]='sleepyPoints'></app-info-bar>
+        <app-info-bar title="Cleaning" [value]='cleanPoints'></app-info-bar>
+        <app-info-bar title="Happiness" [value]='happyPoints'></app-info-bar>
+      </div>
+
+      <div class="cat-body">
+        <img class="cat-body-img" src="../assets/img/body.png" alt="">
+        <div class="cat-head-happy" *ngIf="isHappy">
+          <img src="../assets/img/happy.png" alt="">
+        </div>
+        <div class="cat-head-sad" *ngIf="!isHappy">
+          <img src="../assets/img/sad.png" alt="">
+        </div>
+      </div>
+
+      <div class="actions-box">
+        <button class="btn custom-btn" (click)="gimme('tuna')" [disabled]="isDied"> Gimme Tuna!</button>
+        <button class="btn custom-btn" (click)="gimme('sleep')" [disabled]="isDied"> Gimme your bed!</button>
+        <button class="btn custom-btn" (click)="gimme('bath')" [disabled]="isDied"> Gimme a Lick Bath!</button>
+        <button class="btn custom-btn" (click)="gimme('rubs')" [disabled]="isDied"> Gimme Belly Rubs!</button>
+      </div>
+    </div>
+
+      <div class="restart-box mt-4" *ngIf="showButtonRestart">
+        <button type="button" (click)='onRestart()' class="btn custom-btn">Play again</button>
+      </div>
+
+    <app-modal [openModal]="openModal" (restartGame)="onRestart()" (showButtonRestart)="buttonRestart()">  
+    </app-modal>
+
+  </div>
+
+</div>

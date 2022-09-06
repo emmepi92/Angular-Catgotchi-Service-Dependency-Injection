@@ -31,9 +31,8 @@ export class AppComponent implements OnInit {
       this.isHappy = this.pointsService.allOver50(this.hungryPoints, this.sleepyPoints, this.cleanPoints, this.happyPoints);
       this.sleepyPoints -= 1;
       this.cleanPoints -= 1;
-      this.hungryPoints= this.pointsService.loseLastPoints(this.hungryPoints,2)
-      this.happyPoints = this.pointsService.loseLastPoints(this.happyPoints, 2)
-      
+      this.hungryPoints= this.pointsService.lose2Points(this.hungryPoints,2)
+      this.happyPoints = this.pointsService.lose2Points(this.happyPoints, 2)
     }
   }
 
@@ -61,21 +60,6 @@ export class AppComponent implements OnInit {
   gimmeRubs() {
     this.happyPoints = this.pointsService.give5Points(this.happyPoints)
     this.hungryPoints = this.pointsService.losePointsCollateral(this.hungryPoints, 3)
-  }
-
-  gimme(something: string): any {
-    if (something == 'tuna') {
-      this.gimmeTuna()
-    }
-    if (something == 'sleep') {
-      this.gimmeSleep()
-    }
-    if (something == 'bath') {
-      this.gimmeBath()
-    }
-    if (something == 'rubs') {
-      this.gimmeRubs()
-    }
   }
 
   onRestart() {

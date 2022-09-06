@@ -20,9 +20,8 @@ export class PointsService {
       return points
     }
   }
-
   
-  loseLastPoints(points: number, deficit: number) {
+  lose2Points(points: number, deficit: number) {
     if (points < deficit) {
       return 0
     } else {
